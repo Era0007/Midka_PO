@@ -8,7 +8,7 @@ import lombok.*;
 @Data
 @Setter
 
-@Table(name = "t_groups")
+@Table(name = "groups")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Group {
