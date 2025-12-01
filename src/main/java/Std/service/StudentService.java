@@ -1,9 +1,9 @@
 package Std.service;
 
-
 import Std.dto.DtoStudent;
 import Std.model.Student;
 import Std.repos.StudentRepos;
+import Std.repos.StudentCriteriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentService {
     private final StudentRepos studentRepos;
+    private final StudentCriteriaRepository studentCriteriaRepository;
 
     public List<DtoStudent> getAll(){
         List<Student> students = studentRepos.findAll();
@@ -44,23 +45,33 @@ public class StudentService {
         studentRepos.deleteById(id);
     }
 
+    public List<DtoStudent> searchStudents(String firstname, String lastname, Integer age) {
+        List<Student> students = studentCriteriaRepository.findStudents(firstname, lastname, age);
+        List<DtoStudent> dtoStudents = new ArrayList<>();
+
+        for(Student s : students){
+            dtoStudents.add(toDto(s));
+        }
+        return dtoStudents;
+    }
+
     public DtoStudent toDto(Student student){
         DtoStudent dtoStudent = new DtoStudent();
 
         dtoStudent.setId(student.getId());
-        dtoStudent.setFirstName(student.getFirstName());
-        dtoStudent.setLastName(student.getLastName());
+        dtoStudent.setFirstName(student.getFirstname());
+        dtoStudent.setLastName(student.getLastname());
         dtoStudent.setAge(student.getAge());
         dtoStudent.setEmail(student.getEmail());
 
         return dtoStudent;
-
     }
+
     public Student toStudent(DtoStudent dtoStudent){
         Student student = new Student();
 
-        student.setFirstName(dtoStudent.getFirstName());
-        student.setLastName(dtoStudent.getLastName());
+        student.setFirstname(dtoStudent.getFirstName());
+        student.setLastname(dtoStudent.getLastName());
         student.setAge(dtoStudent.getAge());
         student.setId(dtoStudent.getId());
         student.setEmail(dtoStudent.getEmail());
